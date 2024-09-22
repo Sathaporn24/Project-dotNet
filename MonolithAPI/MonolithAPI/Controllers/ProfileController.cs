@@ -21,7 +21,7 @@ public class ProfileController : ControllerBase
         this._appDbContext = appDbContext;
     }
 
-    [HttpGet()]
+    [HttpGet]
     public async Task<IActionResult> AllProfile()
     {
         var profile = await _appDbContext.Profiles.ToListAsync();

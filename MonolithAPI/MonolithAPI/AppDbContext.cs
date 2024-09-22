@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MonolithAPI.Models;
 
@@ -8,6 +9,10 @@ public class AppDbContext : IdentityDbContext<UserModel, RoleModel, Guid>
 {
     public DbSet<ProductModel> Products { get; set; }
     public DbSet<ProfileModel> Profiles { get; set; }
+
+    public DbSet<CategoryModel> Categories {get; set;}
+
+    public DbSet<UnitModel> Units {get; set;}
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
