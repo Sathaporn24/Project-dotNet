@@ -39,5 +39,48 @@ public class UnitController : ControllerBase
         return Ok(new {data = unit});
     }
 
+    [HttpPost("CreateUnits")]
+    public async Task<IActionResult> CreateUnits([FromBody] UnitModel units)
+    {
+        if(!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
 
+        await _appDbContext.Units.AddAsync(units);
+        await _appDbContext.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(GetUnits), new {id = units.Id},  new { data = units});
+    }
+
+    [HttpDelete("DeleteUnits/{id}")]
+    public async Task<IActionResult> DeleteUnits(int id)
+    {
+        var Units =  await _appDbContext.Units.SingleOrDefaultAsync(s => s.Id == id);
+        if(Units == null) {
+            return NotFound(new { messages = "Units not found." });
+        }
+
+        _appDbContext.Units.Remove(Units);
+        await _appDbContext.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    [HttpPut("UpdateUnits/{id}")]
+    public async Task<IActionResult> UpdateUnits(int id , [FromBody] UnitModel units) 
+    {
+        if(!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
+
+        var existingUnits = await _appDbContext.Units.SingleOrDefaultAsync(s => s.Id == id);
+        if(existingUnits == null) {
+            return NotFound (new { messages = "Units not found."});
+        }
+       
+        existingUnits.UnName = units.UnName;
+        await _appDbContext.SaveChangesAsync();
+        
+        return Ok(new {data = existingUnits });
+    }
 }
