@@ -27,4 +27,17 @@ public class UnitController : ControllerBase
         var units = await _appDbContext.Units.ToListAsync();
         return Ok(new { data = units });
     }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetUnits(int id)
+    {
+        var unit = await _appDbContext.Units.SingleOrDefaultAsync(s=>s.Id == id);
+        if(unit == null){
+            return NotFound(new { messages = "Unit not found." });
+        }
+
+        return Ok(new {data = unit});
+    }
+
+
 }
