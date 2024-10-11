@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace MonolithAPI.Models;
 
-public class CategoryModel
+public class FavoriteModel
 {
     [BindNever]
     public int Id { get; set; }
-    public string? CateName { get; set; }
+    public Guid UserId { get; set; }
+    public Guid ProductId {get; set;}
 }

@@ -14,6 +14,8 @@ public class AppDbContext : IdentityDbContext<UserModel, RoleModel, Guid>
 
     public DbSet<UnitModel> Units {get; set;}
 
+    public DbSet<FavoriteModel> Favorites {get; set;}
+
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }

@@ -9,7 +9,6 @@ using MonolithAPI.Models;
 namespace MonolithAPI.Controllers;
 
 [ApiController]
-[Authorize]
 [Route("[controller]")]
 [Produces("application/json")]
 public class ProductsController : ControllerBase
@@ -23,6 +22,15 @@ public class ProductsController : ControllerBase
         _appDbContext = appDbContext;
     }
 
+    [HttpGet("Search")]
+    public async Task<IActionResult> SearchProduct([FromQuery] string ProductName){
+        List<ProductModel> products =  await _appDbContext.Products.Where(w=>w.Name.Contains(ProductName)).ToListAsync();
+        return Ok(new {
+            data = products
+        });
+    }
+
+    [Authorize]
     [HttpGet]
     [ProducesResponseType(statusCode: StatusCodes.Status200OK, type: typeof(PagingDTO<ProductDTO>))]
     public async Task<IActionResult> GetProducts([FromQuery] GetProductDTO request)
@@ -60,6 +68,7 @@ public class ProductsController : ControllerBase
         });
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     [ProducesResponseType(statusCode: StatusCodes.Status200OK, type: typeof(ProductDetailDTO))]
     [ProducesResponseType(statusCode: StatusCodes.Status404NotFound)]
@@ -233,4 +242,6 @@ public class ProductsController : ControllerBase
             System.IO.File.Delete(ImagePath);
         }
     }
+
+
 }
