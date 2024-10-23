@@ -24,8 +24,8 @@ public class CategoryController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> AllCategory()
     {
-        var categories = await _appDbContext.Categories.ToListAsync();
-        return Ok(new {data = categories});
+        var categories = await _appDbContext.Categories.OrderByDescending(d => d.Id).ToListAsync();
+        return Ok(new { data = categories });
     }
     
     [HttpGet("{id}")]
