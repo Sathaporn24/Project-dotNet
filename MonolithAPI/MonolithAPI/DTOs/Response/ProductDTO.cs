@@ -7,4 +7,6 @@ public class ProductDTO
     public double Price { get; set; }
     public string? ImagePath { get; set; }
     public string? OwnerName { get; set; }
+    public int Category { get; set; }
+    public int Unit { get; set; }
 }

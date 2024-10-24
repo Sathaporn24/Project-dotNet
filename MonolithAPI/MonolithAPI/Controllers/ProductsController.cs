@@ -87,6 +87,8 @@ public class ProductsController : ControllerBase
             Description = curProduct.Description,
             ImagePath = string.IsNullOrEmpty(curProduct.ImagePath) ? curProduct.ImagePath : $"/{curProduct.ImagePath}",
             OwnerName = curProduct.Owner?.FullName,
+            Category = (int)curProduct.IdCate,
+            Unit = (int)curProduct.IdUn
         };
         return Ok(result);
     }
@@ -116,6 +118,8 @@ public class ProductsController : ControllerBase
             Name = request.Name,
             Price = request.Price,
             Description = request.Description,
+            IdCate = request.Category,
+            IdUn = request.Unit,
             ImagePath = filePath,
             CreatedBy = userId,
             CreatedTime = DateTime.UtcNow
@@ -129,6 +133,8 @@ public class ProductsController : ControllerBase
             Name = newProduct.Name,
             Price = newProduct.Price,
             Description = newProduct.Description,
+            Category = (int)newProduct.IdCate,
+            Unit = (int)newProduct.IdUn,
             ImagePath = string.IsNullOrEmpty(filePath) ? filePath : $"/{filePath}",
             OwnerName = ownerName
         };
@@ -164,6 +170,8 @@ public class ProductsController : ControllerBase
         curProduct.Name = request.Name;
         curProduct.Price = request.Price;
         curProduct.Description = request.Description;
+        curProduct.IdCate = request.Category;
+        curProduct.IdUn = request.Unit;
         curProduct.UpdatedBy = userId;
         curProduct.UpdatedTime = DateTime.UtcNow;
 

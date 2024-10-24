@@ -8,6 +8,10 @@ public class ProductModel
     public required string Name { get; set; }
     public double Price { get; set; }
     public string? Description { get; set; }
+
+    public int? IdCate { get; set; }
+    public int? IdUn { get; set; }
+
     public string? ImagePath { get; set; }
     public Guid? CreatedBy { get; set; }
     public DateTime? CreatedTime { get; set; }

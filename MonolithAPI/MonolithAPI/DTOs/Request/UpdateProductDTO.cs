@@ -12,5 +12,9 @@ public class UpdateProductDTO
 
     public string? Description { get; set; }
 
+    public int Category { get; set; }
+
+    public int Unit { get; set; }
+
     public IFormFile? Image { get; set; }
 }
