@@ -21,22 +21,16 @@ public class ProfileController : ControllerBase
         this._appDbContext = appDbContext;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> AllProfile()
-    {
-        var profile = await _appDbContext.Profiles.ToListAsync();
-        return Ok(new {data = profile});
-    }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetProfile(Guid id)
     {
         var profile = await _appDbContext.Profiles.SingleOrDefaultAsync(s=>s.Id == id);
         if(profile == null){
-            return NotFound(new { messages = "Profile not found." });
+            return NotFound(new { messages = "Profile not found.", status = false });
         }
 
-        return Ok(new {data = profile});
+        return Ok(new {data = profile, status  = true});
     }
 
     [HttpPost("CreateProfile")]
@@ -52,19 +46,6 @@ public class ProfileController : ControllerBase
         return CreatedAtAction(nameof(GetProfile), new {id = profile.Id},  new { data = profile});
     }
 
-    [HttpDelete("DeleteProfile/{id}")]
-    public async Task<IActionResult> DeleteProfile(Guid id)
-    {
-        var profile =  await _appDbContext.Profiles.SingleOrDefaultAsync(p => p.Id == id);
-        if(profile == null) {
-            return NotFound(new { messages = "Profile not found." });
-        }
-
-        _appDbContext.Profiles.Remove(profile);
-        await _appDbContext.SaveChangesAsync();
-
-        return NoContent();
-    }
 
     [HttpPut("UpdateProfile/{id}")]
     public async Task<IActionResult> UpdateProfile(Guid id, [FromBody] ProfileModel updateProfile)
@@ -78,7 +59,11 @@ public class ProfileController : ControllerBase
             return NotFound (new { messages = "Profile not found."});
         }
 
-        _appDbContext.Profiles.Update(updateProfile);
+        existingProfile.FullAddress = updateProfile.FullAddress;
+        existingProfile.District = updateProfile.District;
+        existingProfile.Amphoe = updateProfile.Amphoe;
+        existingProfile.Province = updateProfile.Province;
+        existingProfile.ZipCode = updateProfile.ZipCode;
         await _appDbContext.SaveChangesAsync();
         
         return Ok(new {data = existingProfile });

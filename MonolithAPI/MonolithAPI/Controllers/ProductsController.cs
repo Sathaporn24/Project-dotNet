@@ -22,6 +22,16 @@ public class ProductsController : ControllerBase
         _appDbContext = appDbContext;
     }
 
+    [HttpGet("All")]
+    public async Task<IActionResult> AllProduct()
+    {
+        List<ProductModel> products = await _appDbContext.Products.ToListAsync();
+        return Ok(new
+        {
+            data = products
+        });
+    }
+
     [HttpGet("Search")]
     public async Task<IActionResult> SearchProduct([FromQuery] string ProductName){
         List<ProductModel> products =  await _appDbContext.Products.Where(w=>w.Name.Contains(ProductName)).ToListAsync();
@@ -30,7 +40,34 @@ public class ProductsController : ControllerBase
         });
     }
 
-    [Authorize]
+    [HttpGet("Detail")]
+    public async Task<IActionResult> DetailProduct(Guid id)
+    {
+        var curProduct = await _appDbContext.Products.FirstOrDefaultAsync(x => x.Id == id);
+        if (curProduct == null)
+        {
+            return NotFound();
+        }
+        var nameCate = _appDbContext.Categories.SingleOrDefault(s => s.Id == curProduct.IdCate)?.CateName;
+        var nameUnit = _appDbContext.Units.SingleOrDefault(s => s.Id == curProduct.IdUn)?.UnName;
+        var newDetailProduct = new
+        {
+            Name = curProduct.Name,
+            Price = curProduct.Price,
+            Description = curProduct.Description,
+            ImagePath = string.IsNullOrEmpty(curProduct.ImagePath) ? curProduct.ImagePath : $"/{curProduct.ImagePath}",
+            OwnerName = curProduct.Owner?.FullName,
+            Category = nameCate,
+            Unit = nameUnit,
+        };
+
+        return Ok(new
+        {
+            data = newDetailProduct
+        });
+    }
+
+
     [HttpGet]
     [ProducesResponseType(statusCode: StatusCodes.Status200OK, type: typeof(PagingDTO<ProductDTO>))]
     public async Task<IActionResult> GetProducts([FromQuery] GetProductDTO request)
@@ -68,7 +105,7 @@ public class ProductsController : ControllerBase
         });
     }
 
-    [Authorize]
+
     [HttpGet("{id}")]
     [ProducesResponseType(statusCode: StatusCodes.Status200OK, type: typeof(ProductDetailDTO))]
     [ProducesResponseType(statusCode: StatusCodes.Status404NotFound)]

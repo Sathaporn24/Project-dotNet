@@ -23,9 +23,19 @@ public class FavoriteController : ControllerBase
     }
 
     [HttpGet]    
-    public async Task<IActionResult> AllFavorite()
+    public async Task<IActionResult> AllFavorite(Guid userId)
     {
-        var favorites = await _appDbContext.Favorites.ToListAsync();
+        var favorites = await (from f in _appDbContext.Favorites
+                               join p in _appDbContext.Products on f.ProductId equals p.Id
+                               where f.UserId == userId 
+                               select new 
+                               {
+                                   FavoriteId = f.Id,
+                                   ProductId = p.Id,
+                                   ProductName = p.Name,
+                                   ProductImagePath = p.ImagePath,
+                               }).OrderByDescending(d=>d.FavoriteId).ToListAsync();
+
         return Ok(new { data = favorites });
     }
 
