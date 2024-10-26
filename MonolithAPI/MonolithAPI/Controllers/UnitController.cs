@@ -10,7 +10,7 @@ using MonolithAPI.Models;
 namespace MonolithAPI.Controllers;
 
 [ApiController]
-//[Authorize]
+[Authorize]
 [Route("[controller]")]
 [Produces("application/json")]
 public class UnitController : ControllerBase
@@ -46,8 +46,16 @@ public class UnitController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        await _appDbContext.Units.AddAsync(units);
-        await _appDbContext.SaveChangesAsync();
+        var checkExisting = await _appDbContext.Units.SingleOrDefaultAsync(s => s.UnName == units.UnName);
+        if (checkExisting != null)
+        {
+            return Conflict(new { messages = "it have units." });
+        }
+        else
+        {
+            await _appDbContext.Units.AddAsync(units);
+            await _appDbContext.SaveChangesAsync();
+        }
 
         return CreatedAtAction(nameof(GetUnits), new {id = units.Id},  new { data = units});
     }

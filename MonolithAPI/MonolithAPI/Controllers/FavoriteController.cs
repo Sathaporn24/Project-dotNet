@@ -11,7 +11,7 @@ using MonolithAPI.Models;
 namespace MonolithAPI.Controllers;
 
 [ApiController]
-//[Authorize]
+[Authorize]
 [Route("[controller]")]
 [Produces("application/json")]
 public class FavoriteController : ControllerBase
@@ -45,6 +45,7 @@ public class FavoriteController : ControllerBase
         if(!ModelState.IsValid) {
             return BadRequest(ModelState);
         }
+
         var checkFav = _appDbContext.Favorites.Where(w=>w.ProductId == favorite.ProductId);
         if(checkFav.Any()){
             return Ok(new { messages = "Product is Already." }); 

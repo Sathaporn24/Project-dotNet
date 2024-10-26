@@ -67,7 +67,9 @@ public class ProductsController : ControllerBase
         });
     }
 
+    /********/
 
+    [Authorize]
     [HttpGet]
     [ProducesResponseType(statusCode: StatusCodes.Status200OK, type: typeof(PagingDTO<ProductDTO>))]
     public async Task<IActionResult> GetProducts([FromQuery] GetProductDTO request)

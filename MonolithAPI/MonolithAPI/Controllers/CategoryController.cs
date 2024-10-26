@@ -10,7 +10,7 @@ using MonolithAPI.Models;
 namespace MonolithAPI.Controllers;
 
 [ApiController]
-//[Authorize]
+[Authorize]
 [Route("[controller]")]
 [Produces("application/json")]
 public class CategoryController : ControllerBase
@@ -48,7 +48,7 @@ public class CategoryController : ControllerBase
 
         var checkExisting = await _appDbContext.Categories.SingleOrDefaultAsync(s=>s.CateName == category.CateName);
         if(checkExisting != null){
-            return NotFound(new { messages = "it have categories." });
+            return Conflict(new { messages = "it have categories." });
         } else {
             await _appDbContext.Categories.AddAsync(category);
             await _appDbContext.SaveChangesAsync();
