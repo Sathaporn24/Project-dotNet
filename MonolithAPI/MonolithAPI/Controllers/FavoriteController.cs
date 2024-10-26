@@ -46,7 +46,7 @@ public class FavoriteController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var checkFav = _appDbContext.Favorites.Where(w=>w.ProductId == favorite.ProductId);
+        var checkFav = _appDbContext.Favorites.Where(w=>w.ProductId == favorite.ProductId && w.UserId == favorite.UserId);
         if(checkFav.Any()){
             return Ok(new { messages = "Product is Already." }); 
         }else{
